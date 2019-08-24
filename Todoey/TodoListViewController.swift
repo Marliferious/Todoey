@@ -12,9 +12,16 @@ class TodoListViewController: UITableViewController {
 
     var itemArray = ["Find Inner Peace", "Contruct War Machine", "Rock Out"]
     
+    let defaults = UserDefaults.standard  //required to store data persistantly
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        
+        if let items = defaults.array(forKey: "ToDoListArray") as? [String] {
+            itemArray = items
+            
+        }
     }
 
 
@@ -67,6 +74,8 @@ class TodoListViewController: UITableViewController {
                     //What will happen once user clicks the Add Item Button on your UIAlert
             
             self.itemArray.append(textField.text!)
+            
+            self.defaults.set(self.itemArray, forKey: "ToDoListArray")  //all values are persistantly saved in key value pairs
             
             self.tableView.reloadData()  //reloads table to accept new data
         }

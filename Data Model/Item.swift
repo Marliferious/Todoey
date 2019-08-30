@@ -8,12 +8,10 @@
 
 import Foundation
 
-class Item {
+class Item: Encodable, Decodable {
+  // Course mentiones that  Class Item: Codable will allow inheritance of Encodable and Decodable, but I left it in
+    
     var title : String = ""
     var done : Bool = false
-    
-    
-    
-    
     
 }

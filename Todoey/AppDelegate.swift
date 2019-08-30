@@ -19,7 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         print("didFinishLaunchingWithOptions")
         
         //shows filepath location
-        print(NSSearchPathForDirectoriesInDomains(.documentationDirectory,.userDomainMask, true).last! as String)
+ //       print(NSSearchPathForDirectoriesInDomains(.documentationDirectory,.userDomainMask, true).last! as String)
             
         
         // Override point for customization after application launch.

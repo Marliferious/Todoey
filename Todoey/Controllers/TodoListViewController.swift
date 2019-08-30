@@ -10,21 +10,43 @@ import UIKit
 
 class TodoListViewController: UITableViewController {
 
-    var itemArray = ["Find Inner Peace", "Contruct War Machine", "Rock Out"]
+    var itemArray = [Item]()
     
     let defaults = UserDefaults.standard  //required to store data persistantly
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+      
+        let newItem = Item()
+        newItem.title = "Find Inner Peace"
+        itemArray.append(newItem)
         
-        if let items = defaults.array(forKey: "ToDoListArray") as? [String] {
-            itemArray = items
-            
-        }
+        let newItem2 = Item()
+        newItem2.title = "Get a bigger slice of pie"
+        itemArray.append(newItem2)
+        
+        let newItem3 = Item()
+        newItem3.title = "Nuke the whales"
+        itemArray.append(newItem3)
+        
+   
+        
+        
+  //      if let items = defaults.array(forKey: "ToDoListArray") as? [String] {
+ //           itemArray = items
+  //      }
+        
+        
     }
 
-
+  
+    
+    
+    
+    
+    
+    
+    
     //MARK - TableView DataSource Methods
     
     
@@ -36,7 +58,7 @@ class TodoListViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
-        cell.textLabel?.text = itemArray[indexPath.row]
+        cell.textLabel?.text = itemArray[indexPath.row].title
         
         return cell
     }
@@ -47,13 +69,16 @@ class TodoListViewController: UITableViewController {
         
    //         print (itemArray[indexPath.row])
         
-        
+        if itemArray[indexPath.row].done == false {
+            itemArray[indexPath.row].done = true
+        } else {
+            itemArray[indexPath.row].done = false
+        }
         
         if tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark {
-            
-              tableView.cellForRow(at: indexPath)?.accessoryType = .none
+             tableView.cellForRow(at: indexPath)?.accessoryType = .none
         }  else {
-            tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
+             tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
         }
         
         
@@ -73,7 +98,10 @@ class TodoListViewController: UITableViewController {
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
                     //What will happen once user clicks the Add Item Button on your UIAlert
             
-            self.itemArray.append(textField.text!)
+            let newItem = Item()
+            newItem.title = textField.text!
+            
+            self.itemArray.append(newItem)
             
             self.defaults.set(self.itemArray, forKey: "ToDoListArray")  //all values are persistantly saved in key value pairs
             

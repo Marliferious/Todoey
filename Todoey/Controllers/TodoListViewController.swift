@@ -10,38 +10,20 @@ import UIKit
 
 class TodoListViewController: UITableViewController {
 
-    var itemArray = [Item]()
+        var itemArray = [Item]()
     
-     let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
+        //allows us to save to the document directory for the app, so we can save and load info from the plist into the array
+        let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
     
-    let defaults = UserDefaults.standard  //required to store data persistantly
-    
-    override func viewDidLoad() {
+        override func viewDidLoad() {
         super.viewDidLoad()
-      
+  
         
         print (dataFilePath)
         
-        
-  /*      let newItem = Item()
-        newItem.title = "Find Inner Peace"
-        itemArray.append(newItem)
-        
-        let newItem2 = Item()
-        newItem2.title = "Get a bigger slice of pie"
-        itemArray.append(newItem2)
-        
-        let newItem3 = Item()
-        newItem3.title = "Nuke the whales"
-        itemArray.append(newItem3)
-    */
-        
+
         loadItems()
 
-  //      if let items = defaults.array(forKey: "ToDoListArray") as? [Item] {
-   //         itemArray = items
-   //    }
-        
         
     }
 
@@ -64,7 +46,6 @@ class TodoListViewController: UITableViewController {
         cell.textLabel?.text = item.title
         
         cell.accessoryType = item.done == true ? .checkmark : .none   //set the cell.accessory type to checkmark is true, none if false
-        
     
         return cell
     }
@@ -73,16 +54,11 @@ class TodoListViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-   //         print (itemArray[indexPath.row])
-        
+       
         itemArray[indexPath.row].done = !itemArray[indexPath.row].done
         
         self.saveItems()
-        
-       
-        
-  
-        
+      
         tableView.deselectRow(at: indexPath, animated: true)
     }
  
@@ -105,10 +81,7 @@ class TodoListViewController: UITableViewController {
             self.itemArray.append(newItem)
             
             self.saveItems()
-            
-            //    self.defaults.set(self.itemArray, forKey: "ToDoListArray")  //all values are persistantly saved in key value pairs
-            
-           
+       
         }
 
         
@@ -116,24 +89,22 @@ class TodoListViewController: UITableViewController {
             alertTextField.placeholder = "Create New Item"
             
             textField = alertTextField
-            
            
-            
         }
         
             alert.addAction(action)
             
             present(alert, animated: true, completion: nil)
-            
-        
+       
         
     }
     //MARK: Model Manipulation Methods
     
     
+    // pulls data from plist into tableView, aka Encode
     func saveItems() {
-        let encoder = PropertyListEncoder()
         
+        let encoder = PropertyListEncoder()
         do {
             let data = try encoder.encode(itemArray)
             try data.write(to: dataFilePath!)
@@ -145,7 +116,7 @@ class TodoListViewController: UITableViewController {
     }
     
     func loadItems() {
-        
+        // pulls data from plist into tableView, aka Decode
         if let data = try? Data(contentsOf: dataFilePath!) {
             let decoder = PropertyListDecoder()
             do {

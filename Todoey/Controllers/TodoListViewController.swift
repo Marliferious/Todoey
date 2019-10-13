@@ -21,9 +21,7 @@ class TodoListViewController: UITableViewController {
         }
     }
     
-    //allows us to save to the document directory for the app, so we can save and load info from the plist into the array
     
-  
     override func viewDidLoad() {
         super.viewDidLoad()
         print (FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
@@ -61,6 +59,7 @@ class TodoListViewController: UITableViewController {
         if let item = todoItems?[indexPath.row] {
             do{
                 try realm.write {
+ 
                     item.done = !item.done   //item.done is toggled
                 }
             } catch {
@@ -69,13 +68,7 @@ class TodoListViewController: UITableViewController {
         }
         
         tableView.reloadData()
-        //        context.delete(itemArray[indexPath.row])
-        //        itemArray.remove(at: indexPath.row)
-        
-        
-        
-//        todoItems[indexPath.row].done = !todoItems[indexPath.row].done
-//        self.saveItems()
+   
         
         tableView.deselectRow(at: indexPath, animated: true)
     }
@@ -98,6 +91,7 @@ class TodoListViewController: UITableViewController {
                     try self.realm.write {
                     let newItem = Item()
                     newItem.title = textField.text!
+                    newItem.dateCreated = Date()
                     currentCategory.items.append(newItem)
                 }
                 } catch {
@@ -147,28 +141,28 @@ class TodoListViewController: UITableViewController {
         tableView.reloadData()
 
 }
-    
+}
 
 //MARK: - Search Bar Methods
-//extension TodoListViewController: UISearchBarDelegate
-//{
-//    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-//        let request : NSFetchRequest<Item> = Item.fetchRequest()
-//        //        print(searchBar.text!)
-//        let predicate = NSPredicate(format: "title CONTAINS [cd] %@", searchBar.text!)
-//        
-//        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
-//        loadItems(with: request, predicate: predicate)
-//        
-//    }
-//    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-//        if searchBar.text?.count == 00{
-//            loadItems()
-//            //DispatchQueue put the action on the main theeard, not background thread
-//            DispatchQueue.main.async {
-//                searchBar.resignFirstResponder()
-//            }
-//            
-//        }
-//    }
+extension TodoListViewController: UISearchBarDelegate
+{
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        
+        todoItems = todoItems?.filter("title CONTAINS[cd] %@", searchBar.text!).sorted(byKeyPath: "dateCreated", ascending: true)
+     
+        tableView.reloadData()  //Will not update unless you do this
+
+        
+    }
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchBar.text?.count == 00{
+            loadItems()
+ 
+            //DispatchQueue put the action on the main theeard, not background thread
+            DispatchQueue.main.async {
+                searchBar.resignFirstResponder()
+            }
+            
+        }
+    }
 }

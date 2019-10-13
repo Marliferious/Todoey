@@ -8,7 +8,7 @@
 //  Notes! See Lesson 474 for complete explanation!
 
 import UIKit
-//import CoreData
+import SwipeCellKit
 import RealmSwift
 
 @UIApplicationMain

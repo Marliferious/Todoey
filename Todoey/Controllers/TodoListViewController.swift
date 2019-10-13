@@ -23,8 +23,7 @@ class TodoListViewController: UITableViewController {
     
     //allows us to save to the document directory for the app, so we can save and load info from the plist into the array
     
-//    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-    
+  
     override func viewDidLoad() {
         super.viewDidLoad()
         print (FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
@@ -39,22 +38,37 @@ class TodoListViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+       
         let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
+       
         if let item = todoItems?[indexPath.row] {
             cell.textLabel?.text = item.title
+        
             //set the cell.accessory type to checkmark is true, none if false
             cell.accessoryType = item.done == true ? .checkmark : .none
+        
         } else {
             cell.textLabel?.text = "No items added"
         }
-       
         return cell
     }
     
     //MARK - TableVue Delegate Methods
     
+    //cell is selected and toggled
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+       
+        if let item = todoItems?[indexPath.row] {
+            do{
+                try realm.write {
+                    item.done = !item.done   //item.done is toggled
+                }
+            } catch {
+                print("Error \(error)")
+            }
+        }
         
+        tableView.reloadData()
         //        context.delete(itemArray[indexPath.row])
         //        itemArray.remove(at: indexPath.row)
         
@@ -72,20 +86,28 @@ class TodoListViewController: UITableViewController {
     
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
         var textField = UITextField()
+        
         let alert = UIAlertController(title: "Add New Todoey Item", message: "", preferredStyle: .alert)
+        
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
       
-            
+     
             //What will happen once user clicks the Add Item Button on your UIAlert
-            
-//            let newItem = Item(context: self.context)
-//            newItem.title = textField.text!
-//            newItem.done = false
-//            newItem.parentCategory = self.selectedCategory
-//            self.itemArray.append(newItem)
-            
-//            self.saveItems()
-            
+            if let currentCategory = self.selectedCategory {
+                do{
+                    try self.realm.write {
+                    let newItem = Item()
+                    newItem.title = textField.text!
+                    currentCategory.items.append(newItem)
+                }
+                } catch {
+                    print ("Error saving new items \(error)")
+                }
+                
+                self.tableView.reloadData()  //reloads table to accept new data
+            }
+    
+             
         }
         
         
@@ -105,21 +127,23 @@ class TodoListViewController: UITableViewController {
     
     
     // pulls data from plist into tableView, aka Encode
-//    func saveItems() {
+//    func saveItems(todoItems: Item) {
 //
 //        do {
-//            try context.save()
-//        } catch {
+//            try realm.write {
+//                realm.add(todoItems)
+//            }
+//        }  catch {
 //            print ("Error saving context \(error)")
 //        }
 //        tableView.reloadData()  //reloads table to accept new data
 //    }
     
+    
+    
     func loadItems() {
         todoItems = selectedCategory?.items.sorted(byKeyPath: "title", ascending: true)
-        
-    
-       
+     
         tableView.reloadData()
 
 }

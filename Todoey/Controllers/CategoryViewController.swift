@@ -50,15 +50,10 @@ class CategoryViewController: UITableViewController {
     }
     
     func loadCategories(){
-        
        categories = realm.objects(Category.self)
-        
-
-        tableView.reloadData()
-        
-    }
-    
-    
+       tableView.reloadData()
+      }
+ 
       //MARK: - Add New Categories
     
     
@@ -82,8 +77,7 @@ class CategoryViewController: UITableViewController {
         }
         
         alert.addAction(action)
-        
-        present(alert, animated: true, completion: nil)
+          present(alert, animated: true, completion: nil)
     }
   
     //MARK: TABLEVIEW Delegate Methods
@@ -102,9 +96,6 @@ class CategoryViewController: UITableViewController {
     
         //        context.delete(itemArray[indexPath.row])
         //        itemArray.remove(at: indexPath.row)
-        
-        
- 
         
 //         self.saveCategories()
         

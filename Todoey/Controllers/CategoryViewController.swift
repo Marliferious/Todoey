@@ -42,6 +42,7 @@ class CategoryViewController: SwipeTableViewController {
 //        var existingColor: String = categories![indexPath.row].color
         
         cell.backgroundColor = UIColor(hexString: categories?[indexPath.row].color ?? "12000")
+        print(categories![indexPath.row].color)
         
 //        print(existingColor)
         
@@ -132,6 +133,7 @@ class CategoryViewController: SwipeTableViewController {
         
         if let indexPath = tableView.indexPathForSelectedRow {
             destinationVC.selectedCategory = categories?[indexPath.row]
+                        
             
     }
     

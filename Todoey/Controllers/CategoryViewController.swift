@@ -37,22 +37,19 @@ class CategoryViewController: SwipeTableViewController {
         // creation of cell using superclass, and then cell is modified
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
         
-        cell.textLabel?.text = categories?[indexPath.row].name ?? "No categories added yet"
+         if let category = categories?[indexPath.row] {
+        
+        cell.textLabel?.text = category.name
         
 //        var existingColor: String = categories![indexPath.row].color
         
-        cell.backgroundColor = UIColor(hexString: categories?[indexPath.row].color ?? "12000")
-        print(categories![indexPath.row].color)
-        
-//        print(existingColor)
-        
-//        cell.backgroundColor = color ??  UIColor.randomFlat
-        
-//        cell.backgroundColor = UIColor.randomFlat
-//        cell.backgroundColor = UIColor.randomFlat.hexValue()
-//        cell.backgroundColor = UIColor(hexString: <#T##String#>)
-        
-
+            guard let categoryColor = UIColor(hexString: category.color) else {fatalError()}
+            
+            cell.backgroundColor = categoryColor
+            cell.textLabel?.textColor = ContrastColorOf(categoryColor, returnFlat: true)
+            print(categories![indexPath.row].color)
+       
+        }
         return cell
     }
     
